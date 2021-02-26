@@ -18,6 +18,7 @@ Keep in mind that if the fields are being validated within the form at once, the
 If you want to display error message on validation failer, insert a non-displayed div with some ID into your page where it should be displayd ( e.g. <div id='error-msg' style='display:none'>Validation failed</div>).
 If you want to validate each input separately, then type_of_inputs and display_alert_div are not necessary to set.
 
+```
 EXAMPLE:
 
 // INSTANTIATE NEW VALIDATOR
@@ -38,10 +39,12 @@ const form_validator = new Validator({
                 backgroundColor: 'green'
             }  
      });
-     
+```
+
 Then on the validation event (e.g. submiting the form) you run the particular function. 
 If you want to validate all input fields whithin the form,  e.g.:
 
+```
 // EVENT HANDLER ON THE FORM INPUTS VALIDATION
 document.getElementById('submit-button').addEventListener('click', (e)=>{
    const validation_result = form_validator.validateForm('form-to-validate');
@@ -50,10 +53,11 @@ document.getElementById('submit-button').addEventListener('click', (e)=>{
         alert('All fields validated successfully');
     }
 }
-
+```
 
 Or if you want to validate input fields separately, e.g:
 
+```
     // VALIDATION OF SEPARATE INPUTS
     // validate as text
     const input1_result = instSeparate.validateInputText('one');
@@ -66,5 +70,8 @@ Or if you want to validate input fields separately, e.g:
     if(input1_result && input2_result && input3_result) {
         alert('All the separate fields validated successfully');
     }
+
+```
+
 
 
