@@ -20,6 +20,7 @@ If you want to validate each input separately, then type_of_inputs and display_a
 
 EXAMPLE:
 
+// INSTANTIATE NEW VALIDATOR
 const form_validator = new Validator({
             type_of_inputs: 'text', 
             scroll_to_input: false,
@@ -41,6 +42,7 @@ const form_validator = new Validator({
 Then on the validation event (e.g. submiting the form) you run the particular function. 
 If you want to validate all input fields whithin the form,  e.g.:
 
+// EVENT HANDLER ON THE FORM INPUTS VALIDATION
 document.getElementById('submit-button').addEventListener('click', (e)=>{
    const validation_result = form_validator.validateForm('form-to-validate');
     // if all the input fields were validated successfully
@@ -52,6 +54,7 @@ document.getElementById('submit-button').addEventListener('click', (e)=>{
 
 Or if you want to validate input fields separately, e.g:
 
+    // VALIDATION OF SEPARATE INPUTS
     // validate as text
     const input1_result = instSeparate.validateInputText('one');
     // validate as email
