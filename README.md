@@ -43,10 +43,10 @@ const form_validator = new Validator({
 
 Then on the validation event (e.g. submiting the form) you run the particular function. There are four functions available:
 
-validateForm('form or a wrapper id') - use for validating all inputs at once
-validateInputText('input field id') - validates separate input against the void
-validateInputEmail('input field id') - validates separate input against the void and email format
-validateInputDigit('input field id') - validates separate input against the void and number format
+- validateForm('form or a wrapper id') - use for validating all inputs at once
+- validateInputText('input field id') - validates separate input against the void
+- validateInputEmail('input field id') - validates separate input against the void and email format
+- validateInputDigit('input field id') - validates separate input against the void and number format
 
 If you want to validate all input fields whithin the form,  e.g.:
 
