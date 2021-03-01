@@ -1,25 +1,98 @@
-class Validator {
-  
-  /* Validates all input fields within the form (div) or separate input fields
-  ** INSTANTIATION of this class should be just once, right on the page load
-  ** type_of_inputs = could be text / email / digit, applies only if all inputs within the wrapper should be checked at once (if you want to validate separate inputs, omit type_of_inputs option)
-  ** display_alert_div = false or true, indicates whether we want to display some div with message (there could be just one message displayed in any of the inputs failer)
-  ** display_alert_div_id = in case the display_alert is set to true, we pass the id of the div which will be displayed, initialy this div must be set as style.display = 'none'
+/* VALIDATOR OF INPUT FIELDS
+  ** add an inputValidator.js file into your page as a <script src='inputValidator.js'>
+  ** just add an attribute data-inputvalidator='type&messageID&callbackID&messageID' to the input elements which you want to validate
+  ** initialize this class with the options you want passed as a object parameter (e.g. const inst = new Validator() { all the options described below }; )
+  ** type_of_inputs = could be text / email / digit / password1 / password2, applies only if all inputs within the wrapper should be checked at once (if you want to validate separate inputs, omit type_of_inputs option)
   ** scroll_to_input = if set to true, page will scroll to the inputs (scroll_to_input has higher priority than scroll_to_alert)
-  ** scroll_to_alert = if set to true, page will scroll to the alert message div
   ** scroll_behavior = smooth or auto scrolling (default is smooth), if set to 'auto', the scroll will jump to the spot
-  ** custom_styles_change = styles which will be applied on the input fields when the validation of the field fails (defaulty set as borderColor: 'red', borderStyle: 'solid')
-  ** custom_styles_initial = styles which will be applied on the input fields when the validation of the field succeeds (defaulty set as borderColor: 'rgb(118,118,118), borderStyle: 'solid')
+  ** custom_styles_change = object, css styles which will be applied on the input fields when the validation of the field fails (defaulty set as borderColor: 'red', borderStyle: 'solid')
+  ** custom_styles_initial = object, css styles which will be applied on the input fields when the validation of the field succeeds (defaulty set as borderColor: 'rgb(118,118,118), borderStyle: 'solid')
+  ** error_message_styles = object, css styles of the messages
   ** CSS PROPERTIES MUST BE SET WITHOUT HYPHEN, for instance the border-color property must be set as borderColor
-  **
-  ** If all the fields inside the wrapper should be validated against the same type of input (e.g. text), then we can use validateForm method
-  ** If you need to validate particular inputs against different types, then you need to call particular method (e.g. validateInputText) on each input
-  ** If you want to validate separate input fields, each input has to have a unique ID which will be passed as a text into the particular validation function
-  */
+  ** error_message_display = true if the error message should be displayed
+  ** error_messages = object, set the message you want, 'message0' is always assigned to message on not filled out input field
+  ** callbacks = object, callback functions to be executed on the field - must return true on success and false on failure
+  ** password_regex = regular expression for password requirements, defaulty set to 6-20 chars with at least one uppercase letter and one number
+
+  ********************** EXAMPLE USAGE *********************************************************
+  <html>
+  <script src='inputValidator.js'></script>
+  <body>
+  <form id='testForm'>
+    <input type='text' data-inputvalidator='text&&callback1&message1' placeholder="Enter text"><br><br>
+    <input type='text' data-inputvalidator='email&message2&callback2&message3' placeholder="Enter email"><br><br>
+    <input type='text' data-inputvalidator='digit&message4' placeholder="Enter number"><br><br>
+    <input type='text' data-inputvalidator='password1&message5&message6' placeholder="Enter password"><br><br>
+    <input type='text' data-inputvalidator='password2&message5&message6' placeholder="Enter password"><br><br><br>
+    <input type='submit' value='Submit'>
+   </form>
+  </body>
+
+  <script>
+
+    // callback1 function - for instance, allow only text of at least 3 chars
+    const testText = (text_value)=> {
+        return text_value.length >= 3 ? true : false;
+    }
+
+    // callback2 function - for instance, the domain must be gmail.com
+    const testEmail = (email)=> { 
+    const [first_part, domain_name] = email.split('@');
+    return (domain_name === 'gmail.com') ? true : false;
+    }
+
+    // instantiate Validator 
+    const inst = new Validator({
+            scroll_to_input: true,
+            scroll_behavior: 'smooth',
+            error_message_display: true,
+            custom_styles_change: {
+                borderColor: 'red',
+                borderRadius: '5px'
+            },
+            custom_styles_initial: {
+                borderColor: 'grey'
+            },
+            error_messages: {
+              // message0 is always intended for not filled input 
+              message0: 'The field cannot be empty', 
+              message1: 'Text field must be at least 3 characters long',
+              message2: 'Not valid email format',
+              message3: 'Email must be at gmail.com domain',
+              message4: 'Not a number',
+              message5: 'Password must be at least 6 chars long and must contain an uppercase letter and a number',
+              message6: 'Passwords DO NOT match'
+            },
+            error_message_styles: {
+              marginBottom: '5px',
+              color: 'red'
+            },
+            callbacks: {
+              callback1: testText,
+              callback2: testEmail
+            }
+    });
+
+    // add event listener on submitting the form
+    document.getElementById('testForm').addEventListener('submit', (e)=>{
+    e.preventDefault();
+    // launch validation of all fields within the parent element (testForm) = return true if all field are ok, else return false
+    const result = inst.validateForm(document.getElementById('testForm'));  
+    if(result) {
+        alert('Validation of all fields succeeded!!!');
+    }
+    else {
+        alert('Validation of all fields failed!!!');
+    }
+
+    });
   
+    </script> 
+  
+  ************************************************************************************************/
+ class Validator {
+     
   constructor(options = {}) { 
-    // set property which indicates whether the all input fields were validated ok and if not, display (if required) the alert only once after the all input fields control
-    this.validation_ok = true;
     // set class options properties
     this.scroll_to_input = options.scroll_to_input ? options.scroll_to_input : false;
     this.scroll_behavior = options.scroll_behavior ? options.scroll_behavior : 'smooth';
@@ -41,7 +114,7 @@ class Validator {
       message0 : 'The field cannot be empty'
     }
     this.callbacks = options.callbacks ? options.callbacks : {},
-    this.password_regex = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{6,20}$/;
+    this.password_regex = options.password_regex ? options.password_regex : /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{6,20}$/;
     // start validator
     this.fetchInputs();
   }
@@ -95,20 +168,22 @@ class Validator {
       const callback_result = callback_func(input_element.value);
       // if callback result is ok
       if(callback_result===true) {
-        // return true so that the function which called runCallback can continue
+        // return true as valid
         return true;
       }
       else {
+        // apply style change
+        this.applyStyles(input_element, 'custom_styles_change');
         // check if there is any callback message to display, if so, display it
-        if(callback_message!=='') {
+        if(this.error_message_display && callback_message!=='' && callback_message !== 'undefined') {
           this.renderErrorDiv(input_element, callback_message);
         }
-        // return false so that it quits the function
+        // return false as not valid
         return false;
       }
     }
     else {
-      // return true so that the function which called runCallback can continue
+      // return true as valid
       return true;
     }
   }
@@ -198,7 +273,7 @@ class Validator {
         input_element.scrollIntoView({behavior: this.scroll_behavior, block: "end", inline: "nearest"});
     }
     // render error message with its style if required
-    if(this.error_message_display) {
+    if(this.error_message_display) { 
       // if the message should be empty value, then I set the message to 0 which is a default message for empty value
       if(empty_value_message===true) {
         this.renderErrorDiv(input_element, 'message0');
@@ -214,26 +289,30 @@ class Validator {
     }
   }
   
-  // callback function on blur event
-  checkBluredInput(input_element) {
+  // check particular input
+  checkInput(input_element) {
     // find out validation type and message id 
     const validation_type = this.readAttributes(input_element).type;
     // check if the value is not empty, if returned true, execute other check according to the validation_type 
     if(this.testIfNotEmpty(input_element)===true) {
       if(validation_type === 'text') {
-        // check only if there is any callback 
-        this.runCallback(input_element);
+        // run callback function, if callback is true or there is no callback, return true as valid to the caller function, else return false as not valid result
+        return (this.runCallback(input_element)) ? true : false;
       }
       if(validation_type === 'email') {
         // run email check function
         if(this.testEmail(input_element.value)) {
            this.applyStyles(input_element, 'custom_styles_change');
            this.scrollShowMessage(input_element);
+           // return false to the caller function as not valid
+           return false;
         }
         else {
           // set the initial styles and remove error message
           this.applyStyles(input_element, 'custom_styles_initial');
           this.removeErrorDiv(input_element);
+          // run callback function, if callback is true or there is no callback, return true as valid to the caller function, else return false as not valid result
+          return (this.runCallback(input_element)) ? true : false;
         }
       }
       if(validation_type === 'digit') {
@@ -241,20 +320,26 @@ class Validator {
         if(this.testDigit(input_element.value)) {
            this.applyStyles(input_element, 'custom_styles_change');
            this.scrollShowMessage(input_element);
+           // return false to the caller function as not valid
+           return false;
         }
         else {
           // set the initial styles and remove error message
           this.applyStyles(input_element, 'custom_styles_initial');
           this.removeErrorDiv(input_element);
+          // run callback function, if callback is true or there is no callback, return true as valid to the caller function, else return false as not valid result
+          return (this.runCallback(input_element)) ? true : false;
         }
       }
       // first check of password is on valid criteria
-      if(validation_type === 'password1' || validation_type === 'password2') {
+      if(validation_type === 'password1' || validation_type === 'password2') { 
         this.first_check_of_password = 'not valid';
         // run password check function
         if(this.testPass(input_element)) {
            this.applyStyles(input_element, 'custom_styles_change');
            this.scrollShowMessage(input_element);
+           // return false to the caller function as not valid
+           return false;
         }
         else {
           // set the initial styles and remove error message
@@ -262,6 +347,7 @@ class Validator {
           this.removeErrorDiv(input_element);
           // set first_check_of_password to valid so that the check of the passwords match against each other can be executed
           this.first_check_of_password = 'valid';
+          // not returning anything so that it doesn't quit this function and testPasswordMatch can be now executed
         }
       }
       // second check of password is on the match against the other password
@@ -270,17 +356,23 @@ class Validator {
         if(this.testPasswordsMatch(input_element)) {
            this.applyStyles(input_element, 'custom_styles_change');
            this.scrollShowMessage(input_element, false, true);
+           // return false to the caller function as not valid
+           return false;
         }
         else {
           // set the initial styles and remove error message
           this.applyStyles(input_element, 'custom_styles_initial');
           this.removeErrorDiv(input_element);
+          // return true as valid
+          return true;
         }
       }
     } 
     else {
       // scroll and display message if required (second argument 'true' is passed only because this function is being run based on empty field so I have to set fixed message_id)
       this.scrollShowMessage(input_element, true);
+      // return false as not valid
+      return false;
     }
   }
   
@@ -289,7 +381,7 @@ class Validator {
     this.inputs_to_validate = document.querySelectorAll('input[data-inputvalidator]');
     for (let el of this.inputs_to_validate) {
       el.addEventListener('blur', (evt)=>{
-        this.checkBluredInput(evt.target);
+        this.checkInput(evt.target);
       });
     }
   }
@@ -339,17 +431,15 @@ class Validator {
       
   // check all input fields if not empty
   validateForm(parent_element) {
-    let all_inputs_filled = true;
+    let all_inputs_ok = true;
     for (let el of this.inputs_to_validate) {
-      if(!this.testIfNotEmpty(el)) {
-        // set all_inputs_filled to false
-        all_inputs_filled = false;
-        // show error message and scroll if required
-        this.scrollShowMessage(el, true);
+      // validate each input element, if any of them fails, set all_inputs_filled to false
+      if(!this.checkInput(el)) {
+        all_inputs_ok = false;
       }
     }
-    // if all field are fill, return true to the external on submit function
-    if(all_inputs_filled === true) {
+    // if all field are filled and valid, return true to the external on submit function
+    if(all_inputs_ok === true) {
       return true;
     }
     else {
