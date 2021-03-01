@@ -4,84 +4,72 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>JS Input Validator</title>
     <script src="./InputValidator.js"></script>
 </head>
-<style>
-    input {
-        display: block;
-        margin-bottom: 100px;
-    }
-</style>
+
 <body>
-  <!-- INPUT FIELDS TO BE CHECKED AT ONCE WITHIN THE FORM -->
-  <div id='form-to-validate'>
-    <input type='text' id='first' placeholder="Enter text">
-    <input type='text' id='second' placeholder="Enter text">
-    <input type='text' id='third' placeholder="Enter text">
-    <input type='text' id='fourth' placeholder="Enter text">
-    <div id='validation-failed-message' style="display:none; color:red">FORM IS NOT COMPLETE, CHECK ALL THE FIELDS</div>
-    <button onclick='validate_whole_form();'>VALIDATE ALL INPUTS</button>
-  </div>
-  <div style="margin: 100px 0 100px 0">****************************************************************************</div>
-  <!-- INPUT FIELDS TO BE CHECKED SEPARATELY -->
-    <input type='text' id='one' placeholder="Enter text">
-    <input type='text' id='two' placeholder="Enter email">
-    <input type='text' id='three' placeholder="Enter numbers">
-    <div id='validation-failed-message' style="display:none; color:red">FORM IS NOT COMPLETE, CHECK ALL THE FIELDS</div>
-    <button onclick='validate_separate_input();'>VALIDATE SEPARATE INPUTS</button>
+ 
+   <form id='testForm'>
+    <input type='text' data-inputvalidator='text&&callback1&message5' id='one' placeholder="Enter text"><br><br>
+    <input type='text' data-inputvalidator='email&message1&callback1&message5' id='two' placeholder="Enter email"><br><br>
+    <input type='text' data-inputvalidator='digit&message2' id='three' placeholder="Enter numbers"><br><br>
+    <input type='text' data-inputvalidator='password1&message3&message4' placeholder="Enter password"><br><br>
+    <input type='text' data-inputvalidator='password2&message3&message4' placeholder="Enter password"><br><br><br>
+    <input type='submit' value='Submit'>
+   </form>
  
 </body>
 
 <script>
- /* VALIDATE ALL INPUT FIELDS WITHIN THE FORM */
- const instForm = new Validator({
-            type_of_inputs: 'text', 
-            scroll_to_input: false,
-            scroll_behavior: 'auto',
-            display_alert_div: true,
-            scroll_to_alert: true,
-            alert_div_id: 'validation-failed-message',
-            custom_styles_change: {
-                borderColor: 'red',
-                borderStyle: 'solid'
-            },
-            custom_styles_initial: {
-                borderColor: 'grey',
-                borderStyle: 'solid',
-                backgroundColor: 'green'
-            }  
-     });
- function validate_whole_form() { 
-    const validation_result = instForm.validateForm('form-to-validate');
-    // if all the input fields were validated successfully
-    if(validation_result) {
-        alert('All fields validated successfully');
-    }
-}
-/***********************************************************************************/
 
-/* VALIDATE SEPARATE INPUT FIELDS */
-const instSeparate = new Validator({
+// callback function for testing
+const testEmail = (email)=> {
+  return false;
+}
+
+// instantiate Validator 
+const inst = new Validator({
             scroll_to_input: true,
             scroll_behavior: 'smooth',
+            error_message_display: true,
             custom_styles_change: {
-                borderColor: 'orange',
+                borderColor: 'red',
                 borderRadius: '5px'
+            },
+            custom_styles_initial: {
+                borderColor: 'grey'
+            },
+            error_messages: {
+              message0: 'The field cannot be empty',
+              message1: 'Not correct email format',
+              message2: 'Not a number',
+              message5: 'Toto je message z callback funkce',
+              message3: 'Password minimal requirements not met',
+              message4: 'Passwords dont match'
+            },
+            error_message_styles: {
+              marginBottom: '5px',
+              color: 'red'
+            },
+            callbacks: {
+              callback1: testEmail
             }
     });
-function validate_separate_input() {
-    // validate as text
-    const input1_result = instSeparate.validateInputText('one');
-    // validate as email
-    const input2_result = instSeparate.validateInputEmail('two');
-    // validate as number
-    const input3_result = instSeparate.validateInputDigit('three');
 
-    // if the above three inputs were validated successfully
-    if(input1_result && input2_result && input3_result) {
-        alert('All the separate fields validated successfully');
-    }
-}
+// add event listener on submitting the form
+document.getElementById('testForm').addEventListener('submit', (e)=>{
+  e.preventDefault();
+  // launch validation of all fields within the parent element (testForm) = return true if all field filled out, false if some field empty
+  const result = inst.validateForm(document.getElementById('testForm'));  
+  if(result) {
+    alert('All fields filled out');
+  }
+  else {
+    alert('NOT all fields filled out');
+  }
+
+});
+  
 </script>
 </html>
