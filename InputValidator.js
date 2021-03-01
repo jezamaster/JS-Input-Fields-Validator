@@ -14,7 +14,7 @@
   ** callbacks = object, callback functions to be executed on the field - must return true on success and false on failure
   ** password_regex = regular expression for password requirements, defaulty set to 6-20 chars with at least one uppercase letter and one number
 
-  ********************** EXAMPLE USAGE *********************************************************
+  ********************** EXAMPLE USE *********************************************************
   <html>
   <script src='inputValidator.js'></script>
   <body>
