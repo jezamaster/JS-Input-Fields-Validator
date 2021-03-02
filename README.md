@@ -1,22 +1,30 @@
 # JS-Input-Fields-Validator
-Validator of input fields (text, email, numbers)
+DESCRIPTION:
 
-This javascript implements solution to validate input fields against empty value / email format / numbers. It is easy to use. It allows custom configuration like:
+Input Validator is a Java Script validator which allows to validate input elements against defined requirements. The validation types comprise:
+- text
+- email 
+- number
+- password minimal requirements
+- comparison of two passwords match
+- custom validation based on callback functions
+
+
+It is easy to use. It allows custom configuration like:
 - scrolling to failed validation input field
-- display error message on failed validation
-- scrolling to the error message
+- scrolling to the failed validation input field
 - scrolling behavior (smooth or auto)
-- setting custom css styles for the input which fails against validation
-- setting custom css styles for the input which successfully passed validation
+- switch on/off displaying error messages 
+- setting own messages texts on empty value / incorrect format / passwords no match / callback functions
+- setting custom css styles for the input elements which fails against validation
+- setting custom css styles for the inputs which successfully passed validation
+- setting own regular expressions on email format
+- setting own regular 
+- setting callback functions 
 
-Implementation:
-Just add the InputValidator.js file as the script source <script src='InputValidator.js'>
-Initialize the Validator class - I recommend not to initialize it at the moment of validation event, but it is better to initialize it right after the page is loaded.
-Within the initialization you make all the configuration, the configuration as passed as an object.
-If you want to validate all inputs within the form, then set type_of_inputs to required type ('text', 'email', or 'digit').
-Keep in mind that if the fields are being validated within the form at once, then all the fields can be validated againts only one type (if the form has different inputs of digit / emails / text, then you have to validate them separately).
-If you want to display error message on validation failer, insert a non-displayed div with some ID into your page where it should be displayd ( e.g. <div id='error-msg' style='display:none'>Validation failed</div>).
-If you want to validate each input separately, then type_of_inputs and display_alert_div are not necessary to set.
+IMPLEMENTATION:
+Just add the InputValidator.js file as the script source <script src='InputValidator.js'> and initiate the Validator class.
+When initiating the class, you pass all the configurations which you require as an object parameter. 
 
 ```
 EXAMPLE:
