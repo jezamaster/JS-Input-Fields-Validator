@@ -1,8 +1,9 @@
+
 /* VALIDATOR OF INPUT FIELDS
   ** add an inputValidator.js file into your page as a <script src='inputValidator.js'>
   ** just add an attribute data-inputvalidator='type&messageID&callbackID&messageID' to the input elements which you want to validate
   ** initialize this class with the options you want passed as a object parameter (e.g. const inst = new Validator() { all the options described below }; )
-  ** type_of_inputs = could be text / email / digit / password1 / password2, applies only if all inputs within the wrapper should be checked at once (if you want to validate separate inputs, omit type_of_inputs option)
+  ** validate_only_on_submit = if true, validation of input fields gets executed only when submitting the whole form (which means not on blur event of particular inputs)
   ** scroll_to_input = if set to true, page will scroll to the inputs (scroll_to_input has higher priority than scroll_to_alert)
   ** scroll_behavior = smooth or auto scrolling (default is smooth), if set to 'auto', the scroll will jump to the spot
   ** custom_styles_change = object, css styles which will be applied on the input fields when the validation of the field fails (defaulty set as borderColor: 'red', borderStyle: 'solid')
@@ -14,7 +15,7 @@
   ** callbacks = object, callback functions to be executed on the field - must return true on success and false on failure
   ** password_regex = regular expression for password requirements, defaulty set to 6-20 chars with at least one uppercase letter and one number
 
-  ********************** EXAMPLE USE *********************************************************
+  ********************** EXAMPLE USAGE *********************************************************
   <html>
   <script src='inputValidator.js'></script>
   <body>
@@ -94,6 +95,7 @@
      
   constructor(options = {}) { 
     // set class options properties
+    this.validate_only_on_submit = options.validate_only_on_submit ? options.validate_only_on_submit : false;
     this.scroll_to_input = options.scroll_to_input ? options.scroll_to_input : false;
     this.scroll_behavior = options.scroll_behavior ? options.scroll_behavior : 'smooth';
     this.error_message_display = options.error_message_display ? options.error_message_display : false,
@@ -115,8 +117,10 @@
     }
     this.callbacks = options.callbacks ? options.callbacks : {},
     this.password_regex = options.password_regex ? options.password_regex : /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{6,20}$/;
-    // start validator
-    this.fetchInputs();
+    // start validator if validate_only_on_submit === false
+    if(this.validate_only_on_submit === false) {
+      this.fetchInputs();
+    }
   }
   
   // apply styles (pass the second argument exactly as either 'custom_styles_change' or 'custom_styles_initial')
@@ -432,6 +436,7 @@
   // check all input fields if not empty
   validateForm(parent_element) {
     let all_inputs_ok = true;
+    this.inputs_to_validate = document.querySelectorAll('input[data-inputvalidator]');
     for (let el of this.inputs_to_validate) {
       // validate each input element, if any of them fails, set all_inputs_filled to false
       if(!this.checkInput(el)) {
