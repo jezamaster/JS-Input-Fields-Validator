@@ -27,7 +27,9 @@ When initializing the class, you pass all the configurations which you require a
 Each parameter is separated by '&' sign and must be set in one of the following ways:
 
 FORMAT OF data-inputvalidator:
-data-inputvalidator="type&messageID&callbackID&messageID" or in case of passwords valiation (comparison of two passwords match) you add one more message data-inputvalidator="password&messageID&messageID&callbackID&messageID"
+data-inputvalidator="type&messageID&callbackID&messageID" 
+or 
+in case of passwords validation (comparison of two passwords match) you add one more message like data-inputvalidator="password&messageID&messageID&callbackID&messageID"
 
 - data-inputvalidator="text" -> validates only if the value is empty
 
