@@ -32,7 +32,7 @@ data-inputvalidator="type&messageID&callbackID&messageID"
 or 
 in case of passwords validation (comparison of two passwords match) you add one more message like data-inputvalidator="password&messageID&messageID&callbackID&messageID"
 
-- data-inputvalidator="**text**" -> validates only if the value is empty
+- data-inputvalidator="**text**" -> validates only if the value is empty (**NOTE that message0 is ALWAYS reserved only for empty value message, you can configure the message, but never use message0 for anything else**)
 
 - data-inputvalidator="**text&&callback1&message5**" -> will call the callback function (callback function assigned to callback1 variable in the your configuration) which displays message5, **NOTICE that there are two '&&' after the type**, it is because the second parameter should be message, so if there is no message, you just omit it and put next '&' separator sign
    
