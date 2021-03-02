@@ -32,19 +32,19 @@ data-inputvalidator="type&messageID&callbackID&messageID"
 or 
 in case of passwords validation (comparison of two passwords match) you add one more message like data-inputvalidator="password&messageID&messageID&callbackID&messageID"
 
-- data-inputvalidator="text" -> validates only if the value is empty
+- data-inputvalidator="**text**" -> validates only if the value is empty
 
-- data-inputvalidator="text&&callback1&message5" -> will call the callback function (callback function assigned to callback1 variable in the your configuration) which displays message5, **NOTICE that there are two '&&' after the type**, it is because the second parameter should be message, so if there is no message, you just omit it and put next '&' separator sign
+- data-inputvalidator="**text&&callback1&message5**" -> will call the callback function (callback function assigned to callback1 variable in the your configuration) which displays message5, **NOTICE that there are two '&&' after the type**, it is because the second parameter should be message, so if there is no message, you just omit it and put next '&' separator sign
    
-- data-inputvalidator="email&message1&callback2&message8" -> validates email, if in incorrect format, message1 will be displayed, if not empty, callback2 is called and if false returned, it will display meesage8
+- data-inputvalidator="**email&message1&callback2&message8**" -> validates email, if in incorrect format, message1 will be displayed, if not empty, callback2 is called and if false returned, it will display meesage8
 
-- data-inputvalidator="digit@message2" -> if not a number, display message 2
+- data-inputvalidator="**digit@message2**" -> if not a number, display message 2
 
-- data-inputvalidator="digit@message2&callback2&message3" -> if not a number, display message 2, if number is valid, call the callback2 function which will display message3 on false return
+- data-inputvalidator="**digit@message2&callback2&message3**" -> if not a number, display message 2, if number is valid, call the callback2 function which will display message3 on false return
 
-- data-inputvalidator="password1&message4&message5" -> if not correct format of password, display message4, if there exists second input field for re-entering password and it does not match this one, display message5; **NOTE that password type MUST ALWAYS by as password1 variable and the second password as password2 (even if there is only one password field, you must name the variable password1 !!!)**
+- data-inputvalidator="**password1&message4&message5**" -> if not correct format of password, display message4, if there exists second input field for re-entering password and it does not match this one, display message5; **NOTE that password type MUST ALWAYS by as password1 variable and the second password as password2 (even if there is only one password field, you must name the variable password1 !!!)**
 
-- data-inputvalidator="password2&message4&message5" -> the same settings as password1
+- data-inputvalidator="**password2&message4&message5**" -> the same settings as password1
 
 # CALLBACK FUNCTIONS:
 Callback functions can be called on whatever input except for passwords (minimal requirements for password format is passed as a regex in your custom options, as a default it is set 6 up to 20 characters and at least one uppercase letter and one digit.
