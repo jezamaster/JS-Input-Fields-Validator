@@ -8,10 +8,9 @@
     <script src="./InputValidator.js"></script>
 </head>
 <style>
- input { 
+ input, select { 
      width: 20%;
  }
-
 </style>
 <body>
  
@@ -21,6 +20,13 @@
     <input type='text' data-inputvalidator='digit&message4' placeholder="Enter number"><br><br>
     <input type='text' data-inputvalidator='password1&message5&message6' placeholder="Enter password"><br><br>
     <input type='text' data-inputvalidator='password2&message5&message6' placeholder="Enter password"><br><br><br>
+    <select data-inputvalidator='text&&callback3&message7'>
+      <option value='default_value'>How old are you?</option>
+      <option value='between0_30'>0 - 30 years</option>
+      <option value='between30-60'>30 - 60 years</option>
+      <option value='between60_more'>60 and more</option>
+     </select>
+    <br><br><br>
     <input type='submit' value='Submit'>
    </form>
  
@@ -37,6 +43,16 @@ const testText = (text_value)=> {
 const testEmail = (email)=> { 
   const [first_part, domain_name] = email.split('@');
   return (domain_name === 'gmail.com') ? true : false;
+}
+
+// callback3 function - check if any option was selected
+const testSelect = (selected_value)=> {
+  if(selected_value === 'default_value') {
+    return false;
+  }
+  else {
+    return true;
+  }
 }
 
 // instantiate Validator 
@@ -60,7 +76,8 @@ const inst = new Validator({
               message3: 'Email must be at gmail.com domain',
               message4: 'Not a number',
               message5: 'Password must be at least 6 chars long and must contain an uppercase letter and a number',
-              message6: 'Passwords DO NOT match'
+              message6: 'Passwords DO NOT match',
+              message7: 'You must select some option'
             },
             error_message_styles: {
               marginBottom: '5px',
@@ -68,7 +85,8 @@ const inst = new Validator({
             },
             callbacks: {
               callback1: testText,
-              callback2: testEmail
+              callback2: testEmail,
+              callback3: testSelect
             }
     });
 
