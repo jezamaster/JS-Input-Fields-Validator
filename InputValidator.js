@@ -18,6 +18,11 @@
   ********************** EXAMPLE USAGE *********************************************************
   <html>
   <script src='inputValidator.js'></script>
+  <style>
+   input, select { 
+     width: 20%;
+   }
+  </style>
   <body>
   <form id='testForm'>
     <input type='text' data-inputvalidator='text&&callback1&message1' placeholder="Enter text"><br><br>
@@ -25,6 +30,12 @@
     <input type='text' data-inputvalidator='digit&message4' placeholder="Enter number"><br><br>
     <input type='text' data-inputvalidator='password1&message5&message6' placeholder="Enter password"><br><br>
     <input type='text' data-inputvalidator='password2&message5&message6' placeholder="Enter password"><br><br><br>
+    <select data-inputvalidator='text&&callback3&message7'>
+      <option value='default_value'>How old are you?</option>
+      <option value='between0_30'>0 - 30 years</option>
+      <option value='between30-60'>30 - 60 years</option>
+      <option value='between60_more'>60 and more</option>
+     </select>
     <input type='submit' value='Submit'>
    </form>
   </body>
@@ -38,12 +49,23 @@
 
     // callback2 function - for instance, the domain must be gmail.com
     const testEmail = (email)=> { 
-    const [first_part, domain_name] = email.split('@');
-    return (domain_name === 'gmail.com') ? true : false;
+      const [first_part, domain_name] = email.split('@');
+      return (domain_name === 'gmail.com') ? true : false;
+    }
+    
+    // callback3 function - check if any option was selected
+    const testSelect = (selected_value)=> {
+      if(selected_value === 'default_value') {
+      return false;
+      }
+      else {
+       return true;
+      }
     }
 
     // instantiate Validator 
-    const inst = new Validator({
+const inst = new Validator({
+            validate_only_on_submit: false,
             scroll_to_input: true,
             scroll_behavior: 'smooth',
             error_message_display: true,
@@ -62,7 +84,8 @@
               message3: 'Email must be at gmail.com domain',
               message4: 'Not a number',
               message5: 'Password must be at least 6 chars long and must contain an uppercase letter and a number',
-              message6: 'Passwords DO NOT match'
+              message6: 'Passwords DO NOT match',
+              message7: 'You must select some option'
             },
             error_message_styles: {
               marginBottom: '5px',
@@ -70,7 +93,8 @@
             },
             callbacks: {
               callback1: testText,
-              callback2: testEmail
+              callback2: testEmail,
+              callback3: testSelect
             }
     });
 
@@ -161,7 +185,7 @@
   }
   
   // if callback required, call it and display message
-  runCallback(input_element) { 
+  runCallback(input_element) {  
     // check if callback is required on this input element
     const attributes = this.readAttributes(input_element);
     const callback_id = attributes.callback;
@@ -382,7 +406,7 @@
   
   // fetch all input fields with attribute data-inputvalidator, add blur event listener on each of them 
   fetchInputs() {
-    this.inputs_to_validate = document.querySelectorAll('input[data-inputvalidator]');
+    this.inputs_to_validate = document.querySelectorAll('[data-inputvalidator]');
     for (let el of this.inputs_to_validate) {
       el.addEventListener('blur', (evt)=>{
         this.checkInput(evt.target);
@@ -436,7 +460,7 @@
   // check all input fields if not empty
   validateForm(parent_element) {
     let all_inputs_ok = true;
-    this.inputs_to_validate = document.querySelectorAll('input[data-inputvalidator]');
+    this.inputs_to_validate = document.querySelectorAll('[data-inputvalidator]');
     for (let el of this.inputs_to_validate) {
       // validate each input element, if any of them fails, set all_inputs_filled to false
       if(!this.checkInput(el)) {
