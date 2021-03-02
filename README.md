@@ -48,6 +48,7 @@ in case of passwords validation (comparison of two passwords match) you add one 
  
 Callback functions can be called on whatever input except for passwords (minimal requirements for password format is passed as a regex in your custom options, as a default it is set 6 up to 20 characters and at least one uppercase letter and one digit.
 Due to callback functions you can make whatever additional check which you want, for instance check if the text field is of at least x length, or make the callback function which checks if the entered email already exists in your database etc. 
+For instance, you can validate if any option from <select> element was selected, see the example code below. BUT KEEP IN MIND, if there is no message after the 'text' type and you want to set callback on that element, DON'T FORGET TO SEPARATE WITH TWO '&&' (data-inputvalidator['text&&callbackID&messageID']) !!!!!!
 
 
 SUBMITTING THE FORM:
@@ -64,6 +65,12 @@ EXAMPLE of html input fields wrapped in the form parent element:
     <input type='text' data-inputvalidator='digit&message4' placeholder="Enter number"><br><br>
     <input type='text' data-inputvalidator='password1&message5&message6' placeholder="Enter password"><br><br>
     <input type='text' data-inputvalidator='password2&message5&message6' placeholder="Enter password"><br><br><br>
+    <select data-inputvalidator='text&&callback3&message7'>
+      <option value='default_value'>How old are you?</option>
+      <option value='between0_30'>0 - 30 years</option>
+      <option value='between30-60'>30 - 60 years</option>
+      <option value='between60_more'>60 and more</option>
+    </select>
     <input type='submit' value='Submit'>
  </form>
 ```
@@ -82,6 +89,16 @@ const testText = (text_value)=> {
 const testEmail = (email)=> { 
   const [first_part, domain_name] = email.split('@');
   return (domain_name === 'gmail.com') ? true : false;
+}
+
+// callback3 function - check if any option was selected
+const testSelect = (selected_value)=> {
+  if(selected_value === 'default_value') {
+    return false;
+  }
+  else {
+    return true;
+  }
 }
 
 // instantiate Validator 
@@ -105,7 +122,8 @@ const inst = new Validator({
               message3: 'Email must be at gmail.com domain',
               message4: 'Not a number',
               message5: 'Password must be at least 6 chars long and must contain an uppercase letter and a number',
-              message6: 'Passwords DO NOT match'
+              message6: 'Passwords DO NOT match',
+              message7: 'You must select some option'
             },
             error_message_styles: {
               marginBottom: '5px',
@@ -113,10 +131,10 @@ const inst = new Validator({
             },
             callbacks: {
               callback1: testText,
-              callback2: testEmail
+              callback2: testEmail,
+              callback3: testSelect
             }
     });
-
 // add event listener on submitting the form
 document.getElementById('testForm').addEventListener('submit', (e)=>{
   e.preventDefault();
