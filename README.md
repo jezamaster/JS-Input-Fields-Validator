@@ -36,7 +36,7 @@ in case of passwords validation (comparison of two passwords match) you add one 
 
 - data-inputvalidator="text" -> validates only if the value is empty
 
-- data-inputvalidator="text&&callback1&message5" -> will call the callback function (callback function assigned to callback1 variable in the your configuration) which displays message5, NOTICE that there are two '&&' after the type, it is because the second parameter should be message, so if there is no message, you just omit it and put next '&' separator sign
+- data-inputvalidator="text&&callback1&message5" -> will call the callback function (callback function assigned to callback1 variable in the your configuration) which displays message5, **NOTICE that there are two '&&' after the type**, it is because the second parameter should be message, so if there is no message, you just omit it and put next '&' separator sign
    
 - data-inputvalidator="email&message1&callback2&message8" -> validates email, if in incorrect format, message1 will be displayed, if not empty, callback2 is called and if false returned, it will display meesage8
 
@@ -55,7 +55,7 @@ Callback functions can be called on whatever input except for passwords (minimal
 
 Due to callback functions you can make whatever additional check which you want, for instance check if the text field is of at least x length, or make the callback function which checks if the entered email already exists in your database etc. 
 
-For instance, you can validate if any option from <select> element was selected, see the example code below. BUT KEEP IN MIND, if there is no message after the 'text' type and you want to set callback on that element, DON'T FORGET TO SEPARATE WITH TWO '&&' (data-inputvalidator['text&&callbackID&messageID']) !!!!!!
+For instance, you can validate if any option from <select> element was selected, see the example code below. **BUT KEEP IN MIND, if there is no message after the 'text' type and you want to set callback on that element, DON'T FORGET TO SEPARATE WITH TWO '&&' (data-inputvalidator['text&&callbackID&messageID']) !!!!!!**
 
 
 #SUBMITTING THE FORM:
