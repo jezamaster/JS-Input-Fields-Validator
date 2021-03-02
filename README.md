@@ -11,8 +11,7 @@ Input Validator is a Java Script validator which allows to validate input elemen
 
 
 It is easy to use. It allows custom configuration like:
-- scrolling to failed validation input field
-- scrolling to the failed validation input field
+- switch on/off scrolling to failed validation input field
 - scrolling behavior (smooth or auto)
 - switch on/off displaying error messages 
 - setting own messages texts on empty value / incorrect format / passwords no match / callback functions
@@ -41,9 +40,11 @@ data-inputvalidator="type&messageID&callbackID&messageID" or in case of password
 - data-inputvalidator="digit@message2&callback2&message3" -> if not a number, display message 2, if number is valid, call the callback2 function which will display message3 on false return
 
 - data-inputvalidator="password1&message4&message5" -> if not correct format of password, display message4, if there exists second input field for re-entering password and it does not match this one, display message5; NOTE that password type MUST ALWAYS by as password1 variable and the second password as password2 (even if there is only one password field, you must name the variable password1 !!!)
-- 
- 
 
+- data-inputvalidator="password2&message4&message5" -> the same settings as password1
+ 
+Callback functions can be called on whatever input except for passwords (minimal requirements for password format is passed as a regex in your custom options, as a default it is set 6 up to 20 characters and at least one uppercase letter and one digit.
+Due to callback functions you can make whatever additional check which you want, for instance check if the text field is of at least x length, or make the callback function which checks if the entered email already exists in your database etc. 
 
 
 SUBMITTING THE FORM
