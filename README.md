@@ -49,6 +49,7 @@ in case of passwords validation (comparison of two passwords match) you add one 
 - data-inputvalidator="password2&message4&message5" -> the same settings as password1
 
 CALLBACK FUNCTIONS:
+
 Callback functions can be called on whatever input except for passwords (minimal requirements for password format is passed as a regex in your custom options, as a default it is set 6 up to 20 characters and at least one uppercase letter and one digit.
 
 Due to callback functions you can make whatever additional check which you want, for instance check if the text field is of at least x length, or make the callback function which checks if the entered email already exists in your database etc. 
@@ -57,10 +58,12 @@ For instance, you can validate if any option from <select> element was selected,
 
 
 SUBMITTING THE FORM:
+
 When submitting the form (doesn't have to be form, it could be e.g. a div wrapper of the input elements) you call a class method validateForm(parent element) with a parent element (form / div / section or whatever) as a parameter of the method. Assign a variable to this calling method, the method returns true or false based on if all the input fields were validated successfully or failed. If true is returned, make you action (submit the form etc.).
 
 
 EXAMPLES:
+
 ```
 EXAMPLE of html input fields wrapped in the form parent element:
 
