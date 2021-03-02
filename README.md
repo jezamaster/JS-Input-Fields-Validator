@@ -47,71 +47,93 @@ Callback functions can be called on whatever input except for passwords (minimal
 Due to callback functions you can make whatever additional check which you want, for instance check if the text field is of at least x length, or make the callback function which checks if the entered email already exists in your database etc. 
 
 
-SUBMITTING THE FORM
+SUBMITTING THE FORM:
 When submitting the form (doesn't have to be form, it could be e.g. a div wrapper of the input elements) you call a class method validateForm(parent element) with a parent element (form / div / section or whatever) as a parameter of the method. Assign a variable to this calling method, the method returns true or false based on if all the input fields were validated successfully or failed. If true is returned, make you action (submit the form etc.).
 
 
+EXAMPLES:
+```
+EXAMPLE of html input fields wrapped in the form parent element:
+
+ <form id='testForm'>
+    <input type='text' data-inputvalidator='text&&callback1&message1' placeholder="Enter text"><br><br>
+    <input type='text' data-inputvalidator='email&message2&callback2&message3' placeholder="Enter email"><br><br>
+    <input type='text' data-inputvalidator='digit&message4' placeholder="Enter number"><br><br>
+    <input type='text' data-inputvalidator='password1&message5&message6' placeholder="Enter password"><br><br>
+    <input type='text' data-inputvalidator='password2&message5&message6' placeholder="Enter password"><br><br><br>
+    <input type='submit' value='Submit'>
+ </form>
+```
+
+EXAMPLE of initialization of the class with custom configuration, two callback functions and calling the final check on submitting the form:
 
 ```
-EXAMPLE:
+<script>
 
-// INSTANTIATE NEW VALIDATOR
-const form_validator = new Validator({
-            type_of_inputs: 'text', 
-            scroll_to_input: false,
-            scroll_behavior: 'auto',
-            display_alert_div: true,
-            scroll_to_alert: true,
-            alert_div_id: 'validation-failed-message',
+// callback1 function - for instance, allow only text of at least 3 chars
+const testText = (text_value)=> {
+    return text_value.length >= 3 ? true : false;
+}
+
+// callback2 function - for instance, the domain must be gmail.com
+const testEmail = (email)=> { 
+  const [first_part, domain_name] = email.split('@');
+  return (domain_name === 'gmail.com') ? true : false;
+}
+
+// instantiate Validator 
+const inst = new Validator({
+            scroll_to_input: true,
+            scroll_behavior: 'smooth',
+            error_message_display: true,
             custom_styles_change: {
                 borderColor: 'red',
-                borderStyle: 'solid'
+                borderRadius: '5px'
             },
             custom_styles_initial: {
-                borderColor: 'grey',
-                borderStyle: 'solid',
-                backgroundColor: 'green'
-            }  
-     });
-```
+                borderColor: 'grey'
+            },
+            error_messages: {
+              // message0 is always intended for not filled input 
+              message0: 'The field cannot be empty', 
+              message1: 'Text field must be at least 3 characters long',
+              message2: 'Not valid email format',
+              message3: 'Email must be at gmail.com domain',
+              message4: 'Not a number',
+              message5: 'Password must be at least 6 chars long and must contain an uppercase letter and a number',
+              message6: 'Passwords DO NOT match'
+            },
+            error_message_styles: {
+              marginBottom: '5px',
+              color: 'red'
+            },
+            callbacks: {
+              callback1: testText,
+              callback2: testEmail
+            }
+    });
 
-Then on the validation event (e.g. submiting the form) you run the particular function. There are four functions available:
+// add event listener on submitting the form
+document.getElementById('testForm').addEventListener('submit', (e)=>{
+  e.preventDefault();
+  // launch validation of all fields within the parent element (testForm) = return true if all field are ok, else return false
+  const result = inst.validateForm(document.getElementById('testForm'));  
+  if(result) {
+    alert('Validation of all fields succeeded!!!');
+  }
+  else {
+    alert('Validation of all fields failed!!!');
+  }
 
-- validateForm('form or a wrapper id') - use for validating all inputs at once
-- validateInputText('input field id') - validates separate input against the void
-- validateInputEmail('input field id') - validates separate input against the void and email format
-- validateInputDigit('input field id') - validates separate input against the void and number format
-
-If you want to validate all input fields whithin the form,  e.g.:
-
-```
-// EVENT HANDLER ON THE FORM INPUTS VALIDATION
-document.getElementById('submit-button').addEventListener('click', (e)=>{
-   const validation_result = form_validator.validateForm('form-to-validate');
-    // if all the input fields were validated successfully
-    if(validation_result) {
-        alert('All fields validated successfully');
-    }
-}
-```
-
-Or if you want to validate input fields separately, e.g:
-
-```
-    // VALIDATION OF SEPARATE INPUTS
-    // validate as text
-    const input1_result = instSeparate.validateInputText('one');
-    // validate as email
-    const input2_result = instSeparate.validateInputEmail('two');
-    // validate as number
-    const input3_result = instSeparate.validateInputDigit('three');
-
-    // if the above three inputs were validated successfully
-    if(input1_result && input2_result && input3_result) {
-        alert('All the separate fields validated successfully');
-    }
+});
+  
+</script>
 
 ```
+
+
+
+
 
 
 
