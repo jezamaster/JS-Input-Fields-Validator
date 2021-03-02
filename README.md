@@ -141,6 +141,7 @@ const inst = new Validator({
             custom_styles_initial: {
                 borderColor: 'grey'
             },
+            password_regex: /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{6,20}$/,
             error_messages: {
               // message0 is always intended for not filled input 
               message0: 'The field cannot be empty', 
