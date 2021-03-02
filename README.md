@@ -48,6 +48,7 @@ in case of passwords validation (comparison of two passwords match) you add one 
 
 - data-inputvalidator="password2&message4&message5" -> the same settings as password1
 
+
 CALLBACK FUNCTIONS:
 
 Callback functions can be called on whatever input except for passwords (minimal requirements for password format is passed as a regex in your custom options, as a default it is set 6 up to 20 characters and at least one uppercase letter and one digit.
