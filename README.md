@@ -82,6 +82,110 @@ All the custom configurations are passed as an object parameter when initializin
 **- password_regex** = regular expression for password requirements, defaulty set to 6-20 chars with at least one uppercase letter and one number (this regex: /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{6,20}$/  )
 
 
+# EXAMPLE OF HTML:
+
+```
+<form id='testForm'>
+    <input type='text' data-inputvalidator='text&&callback1&message1' placeholder="Enter text"><br><br>
+    <input type='text' data-inputvalidator='email&message2&callback2&message3' placeholder="Enter email"><br><br>
+    <input type='text' data-inputvalidator='digit&message4' placeholder="Enter number"><br><br>
+    <input type='text' data-inputvalidator='password1&message5&message6' placeholder="Enter password"><br><br>
+    <input type='text' data-inputvalidator='password2&message5&message6' placeholder="Enter password"><br><br><br>
+    <select data-inputvalidator='text&&callback3&message7'>
+      <option value='default_value'>How old are you?</option>
+      <option value='between0_30'>0 - 30 years</option>
+      <option value='between30-60'>30 - 60 years</option>
+      <option value='between60_more'>60 and more</option>
+    </select>
+    <input type='submit' value='Submit'>
+ </form>
+ 
+ ```
+ 
+ # EXAMPLE OF JAVASCRIPT:
+ 
+ ```
+<script>
+
+// callback1 function - for instance, allow only text of at least 3 chars
+const testText = (text_value)=> {
+    return text_value.length >= 3 ? true : false;
+}
+
+// callback2 function - for instance, the domain must be gmail.com
+const testEmail = (email)=> { 
+  const [first_part, domain_name] = email.split('@');
+  return (domain_name === 'gmail.com') ? true : false;
+}
+
+// callback3 function - check if any option was selected
+const testSelect = (selected_value)=> {
+  if(selected_value === 'default_value') {
+    return false;
+  }
+  else {
+    return true;
+  }
+}
+
+// instantiate Validator 
+const inst = new Validator({
+            validate_only_on_submit: false,
+            scroll_to_input: true,
+            scroll_behavior: 'smooth',
+            error_message_display: true,
+            custom_styles_change: {
+                borderColor: 'red',
+                borderRadius: '5px'
+            },
+            custom_styles_initial: {
+                borderColor: 'grey'
+            },
+            error_messages: {
+              // message0 is always intended for not filled input 
+              message0: 'The field cannot be empty', 
+              message1: 'Text field must be at least 3 characters long',
+              message2: 'Not valid email format',
+              message3: 'Email must be at gmail.com domain',
+              message4: 'Not a number',
+              message5: 'Password must be at least 6 chars long and must contain an uppercase letter and a number',
+              message6: 'Passwords DO NOT match',
+              message7: 'You must select some option'
+            },
+            error_message_styles: {
+              marginBottom: '5px',
+              color: 'red'
+            },
+            callbacks: {
+              callback1: testText,
+              callback2: testEmail,
+              callback3: testSelect
+            }
+    });
+// add event listener on submitting the form
+document.getElementById('testForm').addEventListener('submit', (e)=>{
+  e.preventDefault();
+  // launch validation of all fields within the parent element (testForm) = return true if all field are ok, else return false
+  const result = inst.validateForm(document.getElementById('testForm'));  
+  if(result) {
+    alert('Validation of all fields succeeded!!!');
+  }
+  else {
+    alert('Validation of all fields failed!!!');
+  }
+
+});
+  
+</script>
+
+```
+
+
+ 
+
+
+
+
 
    
    
