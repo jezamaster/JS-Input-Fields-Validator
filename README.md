@@ -66,7 +66,7 @@ When submitting the form (doesn't have to be form, it could be e.g. a div wrappe
 EXAMPLES:
 
 ```
-EXAMPLE of html input fields wrapped in the form parent element:
+// EXAMPLE of html input fields wrapped in the form parent element:
 
  <form id='testForm'>
     <input type='text' data-inputvalidator='text&&callback1&message1' placeholder="Enter text"><br><br>
@@ -82,6 +82,7 @@ EXAMPLE of html input fields wrapped in the form parent element:
     </select>
     <input type='submit' value='Submit'>
  </form>
+ 
 ```
 
 EXAMPLE of initialization of the class with custom configuration, two callback functions and calling the final check on submitting the form:
