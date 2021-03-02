@@ -11,6 +11,7 @@ Input Validator is a Java Script validator which allows to validate input elemen
 
 
 It is easy to use. It allows custom configuration like:
+- switch on/off if validation should be performed whenever the input is getting out of focus or only on submitting the whole form
 - switch on/off scrolling to failed validation input field
 - scrolling behavior (smooth or auto)
 - switch on/off displaying error messages 
@@ -85,6 +86,7 @@ const testEmail = (email)=> {
 
 // instantiate Validator 
 const inst = new Validator({
+            validate_only_on_submit: false,
             scroll_to_input: true,
             scroll_behavior: 'smooth',
             error_message_display: true,
