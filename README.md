@@ -54,7 +54,7 @@ Callback functions can be called on whatever input except for passwords (minimal
 Due to callback functions you can make whatever additional check which you want, for instance check if the text field is of at least x length, or make the callback function which checks if the entered email already exists in your database etc.
 
 For instance, you can validate if any option from SELECT element was selected, see the example in the EXAMPLE section.
-**BUT KEEP IN MIND, if there is no message after the 'text' type and you want to set callback on that element, DON'T FORGET TO SEPARATE WITH TWO '&&' (data-inputvalidator['text&&callbackID&messageID']) !!!!!!**
+**BUT KEEP IN MIND, if there is no message after the 'text' type and you want to set callback on that element, DON'T FORGET TO SEPARATE WITH TWO '&&' (data-inputvalidator="text&&callbackID&messageID") !!!!!!**
 
 # SUBMITTING THE FORM:
 When submitting the form (doesn't have to be form, it could be e.g. a div wrapper of the input elements) you call a class method validateForm(parent element) with a parent element (form / div / section or whatever) as a parameter of the method. Assign a variable to this calling method, the method returns true or false based on if all the input fields were validated successfully or failed. If true is returned, make you action (submit the form etc.).
