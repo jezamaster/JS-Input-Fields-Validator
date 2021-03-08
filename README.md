@@ -71,7 +71,7 @@ All the custom configurations are passed as an object parameter when initializin
 
 **_ custom_styles_change** = object, css styles which will be applied on the input fields when the validation of the field fails (defaulty set as borderColor: 'red', borderStyle: 'solid'), **CSS PROPERTIES MUST BE SET WITHOUT HYPHEN, for instance the border-color property must be set as borderColor**
 
-**- custom_styles_initial** = object, css styles which will be applied on the input fields when the validation of the field succeeds (defaulty set as borderColor: 'rgb(118,118,118), borderStyle: 'solid')
+**- custom_styles_initial** = object, css styles which will be applied on the input fields when the validation of the field succeeds (defaulty set as borderColor: 'rgb(118,118,118), borderStyle: 'solid'), don't forget to set these styles so that 
 
 **- error_message_styles** = object, css styles of the messages 
 
