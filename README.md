@@ -19,7 +19,6 @@ It is easy to use. It allows custom configuration like:
 - setting custom css styles for the input elements which fails against validation
 - setting custom css styles for the inputs which successfully passed validation
 - setting own regular expressions on email format
-- setting own regular 
 - setting callback functions 
 
 # IMPLEMENTATION:
