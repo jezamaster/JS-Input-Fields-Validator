@@ -77,7 +77,6 @@ class Validator {
     const callback_func = this.callbacks[callback_id];
     if(callback_id !== undefined || callback_id === '') { 
       const callback_result = await callback_func(input_element.value);
-      console.log(callback_result);
       // if callback result is ok
       if(callback_result===true) {
         // return true as valid
