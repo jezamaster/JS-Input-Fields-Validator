@@ -1,4 +1,3 @@
-
 class Validator {
      
   constructor(options = {}) { 
@@ -69,7 +68,7 @@ class Validator {
   }
   
   // if callback required, call it and display message
-  runCallback(input_element) {  
+  async runCallback(input_element) {  
     // check if callback is required on this input element
     const attributes = this.readAttributes(input_element);
     const callback_id = attributes.callback;
@@ -77,7 +76,8 @@ class Validator {
     // get the callback function from options
     const callback_func = this.callbacks[callback_id];
     if(callback_id !== undefined || callback_id === '') { 
-      const callback_result = callback_func(input_element.value);
+      const callback_result = await callback_func(input_element.value);
+      console.log(callback_result);
       // if callback result is ok
       if(callback_result===true) {
         // return true as valid
@@ -91,12 +91,12 @@ class Validator {
           this.renderErrorDiv(input_element, callback_message);
         }
         // return false as not valid
-        return false;
+        return Promise.resolve(false);
       }
     }
     else {
       // return true as valid
-      return true;
+      return Promise.resolve(true);
     }
   }
   
@@ -202,14 +202,15 @@ class Validator {
   }
   
   // check particular input
-  checkInput(input_element) {
+  async checkInput(input_element) {
     // find out validation type and message id 
     const validation_type = this.readAttributes(input_element).type;
     // check if the value is not empty, if returned true, execute other check according to the validation_type 
     if(this.testIfNotEmpty(input_element)===true) {
       if(validation_type === 'text') {
         // run callback function, if callback is true or there is no callback, return true as valid to the caller function, else return false as not valid result
-        return (this.runCallback(input_element)) ? true : false;
+        const returned_value = await this.runCallback(input_element);
+        return returned_value === true ? true : false;
       }
       if(validation_type === 'email') {
         // run email check function
@@ -224,7 +225,8 @@ class Validator {
           this.applyStyles(input_element, 'custom_styles_initial');
           this.removeErrorDiv(input_element);
           // run callback function, if callback is true or there is no callback, return true as valid to the caller function, else return false as not valid result
-          return (this.runCallback(input_element)) ? true : false;
+          const returned_value = await this.runCallback(input_element);
+          return returned_value === true ? true : false;
         }
       }
       if(validation_type === 'digit') {
@@ -240,7 +242,8 @@ class Validator {
           this.applyStyles(input_element, 'custom_styles_initial');
           this.removeErrorDiv(input_element);
           // run callback function, if callback is true or there is no callback, return true as valid to the caller function, else return false as not valid result
-          return (this.runCallback(input_element)) ? true : false;
+          const returned_value = await this.runCallback(input_element);
+          return returned_value === true ? true : false;
         }
       }
       // first check of password is on valid criteria
@@ -361,7 +364,3 @@ class Validator {
     }
   }
 }
-  
-  
-
-
