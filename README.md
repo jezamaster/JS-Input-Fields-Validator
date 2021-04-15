@@ -55,6 +55,8 @@ Due to callback functions you can make whatever additional check which you want,
 For instance, you can validate if any option from SELECT element was selected, see the example in the EXAMPLE section.
 **BUT KEEP IN MIND, if there is no message after the 'text' type and you want to set callback on that element, DON'T FORGET TO SEPARATE WITH TWO '&&' (data-inputvalidator="text&&callbackID&messageID") !!!!!!**
 
+If your callback function is calling Web API (for instance queries to database to check existence of a value etc.), **YOU MUST RETURN A PROMISE FROM YOUR FUNCTION AND ON SUCCESS RESOLVE THIS PROMISE AS TRUE OR ON FAILURE RESOLVE THIS PROMISE AS FALSE, see the checkUser function in the example code below which checks if user's email address already exists**
+
 # SUBMITTING THE FORM:
 When submitting the form (doesn't have to be form, it could be e.g. a div wrapper of the input elements) you call a class method validateForm(parent element) with a parent element (form / div / section or whatever) as a parameter of the method. Assign a variable to this calling method, the method returns true or false based on if all the input fields were validated successfully or failed. If true is returned, make you action (submit the form etc.).
 
@@ -113,11 +115,18 @@ const testText = (text_value)=> {
     return text_value.length >= 3 ? true : false;
 }
 
-// callback2 function - for instance, the domain must be gmail.com
-const testEmail = (email)=> { 
-  const [first_part, domain_name] = email.split('@');
-  return (domain_name === 'gmail.com') ? true : false;
-}
+// callback2 function - check if the entered user's email address already exists
+const checkUser = (user) => {
+  return new Promise(async (resolve) => {
+     const data = await fetch(`./sql_api.php?q=check_user&user=${user}`);
+     const response = await data.text();
+     if(response === 'user_exists') { 
+       resolve(false);
+     } else {
+       resolve(true);
+     }
+  });
+ }
 
 // callback3 function - check if any option was selected
 const testSelect = (selected_value)=> {
@@ -128,6 +137,7 @@ const testSelect = (selected_value)=> {
     return true;
   }
 }
+
 
 // instantiate Validator 
 const inst = new Validator({
@@ -148,7 +158,7 @@ const inst = new Validator({
               message0: 'The field cannot be empty', 
               message1: 'Text field must be at least 3 characters long',
               message2: 'Not valid email format',
-              message3: 'Email must be at gmail.com domain',
+              message3: 'User with this email address already exists',
               message4: 'Not a number',
               message5: 'Password must be at least 6 chars long and must contain an uppercase letter and a number',
               message6: 'Passwords DO NOT match',
@@ -160,7 +170,7 @@ const inst = new Validator({
             },
             callbacks: {
               callback1: testText,
-              callback2: testEmail,
+              callback2: checkUser,
               callback3: testSelect
             }
     });
