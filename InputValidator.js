@@ -77,7 +77,7 @@ class Validator {
     const callback_func = this.callbacks[callback_id];
     if(callback_id !== undefined || callback_id === '') { 
       const callback_result = await callback_func(input_element.value);
-      // if callback result is ok
+     // if callback result is ok
       if(callback_result===true) {
         // return true as valid
         return true;
@@ -209,7 +209,7 @@ class Validator {
       if(validation_type === 'text') {
         // run callback function, if callback is true or there is no callback, return true as valid to the caller function, else return false as not valid result
         const returned_value = await this.runCallback(input_element);
-        return returned_value === true ? true : false;
+        return returned_value === true ? Promise.resolve(true) : Promise.resolve(false);
       }
       if(validation_type === 'email') {
         // run email check function
@@ -217,7 +217,7 @@ class Validator {
            this.applyStyles(input_element, 'custom_styles_change');
            this.scrollShowMessage(input_element);
            // return false to the caller function as not valid
-           return false;
+           return Promise.resolve(false);
         }
         else {
           // set the initial styles and remove error message
@@ -225,7 +225,7 @@ class Validator {
           this.removeErrorDiv(input_element);
           // run callback function, if callback is true or there is no callback, return true as valid to the caller function, else return false as not valid result
           const returned_value = await this.runCallback(input_element);
-          return returned_value === true ? true : false;
+          return returned_value === true ? Promise.resolve(true) : Promise.resolve(false);
         }
       }
       if(validation_type === 'digit') {
@@ -234,7 +234,7 @@ class Validator {
            this.applyStyles(input_element, 'custom_styles_change');
            this.scrollShowMessage(input_element);
            // return false to the caller function as not valid
-           return false;
+           return Promise.resolve(false);
         }
         else {
           // set the initial styles and remove error message
@@ -242,7 +242,7 @@ class Validator {
           this.removeErrorDiv(input_element);
           // run callback function, if callback is true or there is no callback, return true as valid to the caller function, else return false as not valid result
           const returned_value = await this.runCallback(input_element);
-          return returned_value === true ? true : false;
+          return returned_value === true ? Promise.resolve(true) : Promise.resolve(false);
         }
       }
       // first check of password is on valid criteria
@@ -253,7 +253,7 @@ class Validator {
            this.applyStyles(input_element, 'custom_styles_change');
            this.scrollShowMessage(input_element);
            // return false to the caller function as not valid
-           return false;
+           return Promise.resolve(false);
         }
         else {
           // set the initial styles and remove error message
@@ -271,14 +271,14 @@ class Validator {
            this.applyStyles(input_element, 'custom_styles_change');
            this.scrollShowMessage(input_element, false, true);
            // return false to the caller function as not valid
-           return false;
+           return Promise.resolve(false);
         }
         else {
           // set the initial styles and remove error message
           this.applyStyles(input_element, 'custom_styles_initial');
           this.removeErrorDiv(input_element);
           // return true as valid
-          return true;
+          return Promise.resolve(true);
         }
       }
     } 
@@ -286,7 +286,7 @@ class Validator {
       // scroll and display message if required (second argument 'true' is passed only because this function is being run based on empty field so I have to set fixed message_id)
       this.scrollShowMessage(input_element, true);
       // return false as not valid
-      return false;
+      return Promise.resolve(false);
     }
   }
   
@@ -305,14 +305,6 @@ class Validator {
     return this.error_messages[message_id];
   }
   
-  // make validation of all fields on submit (or click or whatever event)
-  validateOnSubmit() {
-    for (let el of this.inputs_to_validate) {
-      // run validation functions
-      
-    }
-  }
-  
   /* create error div above the input field */
   // width of the message div must be the width of the input field width
   // input_element = element passed based on the current data-inputvalidator attribute, message_id = id of the message passed into the constructor options
@@ -321,7 +313,7 @@ class Validator {
     this.removeErrorDiv(input_element);
     const div_width = window.getComputedStyle(input_element).getPropertyValue('width');
     const message = this.getMessageText(message_id);
-    const div = `<div errormessage='true' style='display:block;width:${div_width};'>${message}</div>`;
+    const div = `<div errormessage="true" style="display:block;width:${div_width};">${message}</div>`;
     // insert div above the input field
     input_element.insertAdjacentHTML('beforebegin', div);
     // select this inserted error message div
@@ -344,22 +336,22 @@ class Validator {
   }
       
   // check all input fields if not empty
-  validateForm(parent_element) {
+  async validateForm(parent_element) {
     let all_inputs_ok = true;
     this.inputs_to_validate = document.querySelectorAll('[data-inputvalidator]');
     for (let el of this.inputs_to_validate) {
       // validate each input element, if any of them fails, set all_inputs_filled to false
-      if(!this.checkInput(el)) {
-        all_inputs_ok = false;
-      }
+      let res = await this.checkInput(el);
+      //console.log(el, `returned value is: ${res}`);
+      if(res === false) all_inputs_ok = false;
     }
     // if all field are filled and valid, return true to the external on submit function
     if(all_inputs_ok === true) {
-      return true;
+      return Promise.resolve(true);
     }
     else {
     // return false to the external on submit function
-      return false;
+      return Promise.resolve(false);
     }
   }
 }
