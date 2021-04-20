@@ -39,9 +39,9 @@ in case of passwords validation (comparison of two passwords match) you add one 
    
 - data-inputvalidator="**email&message1&callback2&message8**" -> validates email, if in incorrect format, message1 will be displayed, if not empty, callback2 is called and if false returned, it will display meesage8
 
-- data-inputvalidator="**digit@message2**" -> if not a number, display message 2
+- data-inputvalidator="**digit&message2**" -> if not a number, display message 2
 
-- data-inputvalidator="**digit@message2&callback2&message3**" -> if not a number, display message 2, if number is valid, call the callback2 function which will display message3 on false return
+- data-inputvalidator="**digit&message2&callback2&message3**" -> if not a number, display message 2, if number is valid, call the callback2 function which will display message3 on false return
 
 - data-inputvalidator="**password1&message4&message5**" -> if not correct format of password, display message4, if there exists second input field for re-entering password and it does not match this one, display message5; **NOTE that password type MUST ALWAYS be as password1 variable and the second password as password2 (even if there is only one password field, you must name the variable password1 !!!)**
 
