@@ -97,19 +97,21 @@ const inst = new Validator({
             }
     });
 
-// add event listener on submitting the form
-document.getElementById('testForm').addEventListener('submit', (e)=>{
+  // add event listener on submitting the form
+  document.querySelector('form').addEventListener('submit', (e)=>{
   e.preventDefault();
-  // launch validation of all fields within the parent element (testForm) = return true if all field are ok, else return false
-  const result = inst.validateForm(document.getElementById('testForm'));  
-  if(result) {
-    alert('Validation of all fields succeeded!!!');
-  }
-  else {
-    alert('Validation of all fields failed!!!');
-  }
-
-});
+  
+  // launch validation of all fields within the parent element (Form) => returns Promise, if true then the form is ok, if false, then the form is NOT ok
+  inst.validateForm(document.querySelector('form'))
+    .then(val => {
+      if(val === true) {
+        alert('The form is alright');
+      }
+      else {
+        alert('The form IS NOT alright');
+      }
+     });
+   });
   
 </script>
 </html>
