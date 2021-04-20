@@ -58,7 +58,7 @@ For instance, you can validate if any option from SELECT element was selected, s
 If your callback function is calling Web API (for instance queries to database to check existence of a value etc.), **YOU MUST RETURN A PROMISE FROM YOUR FUNCTION AND ON SUCCESS RESOLVE THIS PROMISE AS TRUE OR ON FAILURE RESOLVE THIS PROMISE AS FALSE, see the checkUser function in the example code below which checks if user's email address already exists**
 
 # SUBMITTING THE FORM:
-When submitting the form (doesn't have to be form, it could be e.g. a div wrapper of the input elements) you call a class method validateForm(parent element) with a parent element (form / div / section or whatever) as a parameter of the method. Assign a variable to this calling method, the method returns true or false based on if all the input fields were validated successfully or failed. If true is returned, make you action (submit the form etc.).
+When submitting the form (doesn't have to be form, it could be e.g. a div wrapper of the input elements) you call a class method validateForm(parent element) with a parent element (form / div / section or whatever) as a parameter of the method. The method returns a **Promise** which resolves **true** in case the form is successfully filled out, and if it resolves **false**. You can see the example code on how it works and how to use it.
 
 
 # CUSTOM CONFIGURATION
@@ -174,19 +174,21 @@ const inst = new Validator({
               callback3: testSelect
             }
     });
-// add event listener on submitting the form
-document.getElementById('testForm').addEventListener('submit', (e)=>{
-  e.preventDefault();
-  // launch validation of all fields within the parent element (testForm) = return true if all field are ok, else return false
-  const result = inst.validateForm(document.getElementById('testForm'));  
-  if(result) {
-    alert('Validation of all fields succeeded!!!');
-  }
-  else {
-    alert('Validation of all fields failed!!!');
-  }
-
-});
+ // add event listener on submitting the form
+ document.querySelector('form').addEventListener('submit', (e)=>{
+ e.preventDefault();
+ 
+ // launch validation of all fields within the parent element (Form) => returns Promise, if true then the form is ok, if false, then the form is NOT ok
+ inst.validateForm(document.querySelector('form'))
+  .then(val => {
+      if(val === true) {
+        alert('The form is alright');
+      }
+      else {
+        alert('The form IS NOT alright');
+      }
+     });
+  });
   
 </script>
 
