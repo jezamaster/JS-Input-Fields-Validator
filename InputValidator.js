@@ -5,7 +5,7 @@ class Validator {
     this.validate_only_on_submit = options.validate_only_on_submit ? options.validate_only_on_submit : false;
     this.scroll_to_input = options.scroll_to_input ? options.scroll_to_input : false;
     this.scroll_behavior = options.scroll_behavior ? options.scroll_behavior : 'smooth';
-    this.error_message_display = options.error_message_display ? options.error_message_display : false,
+    this.error_message_display = options.error_message_display ? options.error_message_display : false;
     this.error_message_styles = options.error_message_styles ? options.error_message_styles : {
       color: 'red',
       fontSize: '1rem',
@@ -22,7 +22,7 @@ class Validator {
     this.error_messages = options.error_messages ? options.error_messages : {
       message0 : 'The field cannot be empty'
     }
-    this.callbacks = options.callbacks ? options.callbacks : {},
+    this.callbacks = options.callbacks ? options.callbacks : {};
     this.password_regex = options.password_regex ? options.password_regex : /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{6,20}$/;
     // start validator if validate_only_on_submit === false
     if(this.validate_only_on_submit === false) {
