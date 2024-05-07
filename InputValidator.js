@@ -1,11 +1,17 @@
-class Validator {
+export class Validator {
      
   constructor(options = {}) { 
     // set class options properties
     this.validate_only_on_submit = options.validate_only_on_submit ? options.validate_only_on_submit : false;
     this.scroll_to_input = options.scroll_to_input ? options.scroll_to_input : false;
     this.scroll_behavior = options.scroll_behavior ? options.scroll_behavior : 'smooth';
-    this.error_message_display = options.error_message_display ? options.error_message_display : false;
+    // the classname of the closest input element where the error div should be rendered
+    this.error_message_display_class = options.error_message_place_class ? options.error_message_place_class : 'default'; 
+    // where within the found element with the specified class the error div should be displayed (the optional values are according to insertAdjacentHTML() specification)
+    this.error_message_display_where = options.error_message_place_where ? options.error_message_place_where : 'beforebegin'; 
+    // should the error message div contain some attribute or class or something specified by the user
+    this.error_message_div_contains = options.error_message_div_contains ? options.error_message_div_contains : '';
+    this.error_message_display = options.error_message_display ? options.error_message_display : false,
     this.error_message_styles = options.error_message_styles ? options.error_message_styles : {
       color: 'red',
       fontSize: '1rem',
@@ -22,7 +28,7 @@ class Validator {
     this.error_messages = options.error_messages ? options.error_messages : {
       message0 : 'The field cannot be empty'
     }
-    this.callbacks = options.callbacks ? options.callbacks : {};
+    this.callbacks = options.callbacks ? options.callbacks : {},
     this.password_regex = options.password_regex ? options.password_regex : /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{6,20}$/;
     // start validator if validate_only_on_submit === false
     if(this.validate_only_on_submit === false) {
@@ -313,11 +319,21 @@ class Validator {
     this.removeErrorDiv(input_element);
     const div_width = window.getComputedStyle(input_element).getPropertyValue('width');
     const message = this.getMessageText(message_id);
-    const div = `<div errormessage="true" style="display:block;width:${div_width};">${message}</div>`;
-    // insert div above the input field
-    input_element.insertAdjacentHTML('beforebegin', div);
+    const random_number = Math.floor(Math.random() * 90000) + 10000;
+    const unique_id = "unique_id_" + random_number;
+    const div = `<div ${this.error_message_div_contains} errormessage="true" id='${unique_id}' style="display:block;width:${div_width};">${message}</div>`;
+    // check if error_message_display_class is defined, if so, then find the closest element with this class, else place it above the input_element 
+    let place_into_element_with_class;
+    if(this.error_message_display_class === 'default') {
+      place_into_element_with_class = input_element;
+    }
+    else {
+      place_into_element_with_class = input_element.closest(`.${this.error_message_display_class}`);
+    }
+     // insert div above the input field
+    place_into_element_with_class.insertAdjacentHTML(this.error_message_display_where, div);
     // select this inserted error message div
-    const inserted_error_div = input_element.previousSibling;
+    let inserted_error_div = document.getElementById(unique_id);
     // apply error message style
     for(const [key, value] of Object.entries(this.error_message_styles)) {
         inserted_error_div.style[key] = value;
@@ -326,13 +342,18 @@ class Validator {
   
   // remove the error message div 
   removeErrorDiv(input_element) {
-    // remove first div in line above the input_element
-   try {
-    const error_div = input_element.previousSibling;
-    // remove error message if exists (check if the previousSibling has attribute errormessage)
-    if(error_div.hasAttribute('errormessage')) error_div.remove();
-   }
-    catch {}
+    // if there was not specified any error_message_place_class, so remove the previous siblings where the error div is defaulty placed
+    if(this.error_message_display_class === 'default') {
+      // remove first div in line above the input_element
+      const error_div = input_element.previousSibling;
+      // remove error message if exists (check if the previousSibling has attribute errormessage)
+      if(error_div.hasAttribute('errormessage')) error_div.remove();
+    }
+     // else as I don't know where the user wanted to place the div error (within which class he specified the div), I am removing all error divs
+     const all_error_divs = document.querySelectorAll('[errormessage]');
+     for(const el of all_error_divs) {
+      el.remove();
+     }
   }
       
   // check all input fields if not empty
