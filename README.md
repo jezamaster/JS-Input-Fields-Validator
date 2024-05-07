@@ -78,6 +78,12 @@ All the custom configurations are passed as an object parameter when initializin
 
 **- error_message_display** = true if the error message should be displayed
 
+**- error_message_place_class** = if you want to place the div with error message somewhere else than into the default place (which is right above the verified input field), then set the class name of the div (or other element) whitin which you want to place it
+
+**- error_message_place_where** = this parameter specifies where exactly within the error_message_place_class element you want to place the error message, the option are 'beforebegin', 'afterbegin','beforeend','afterend' - see the description of those at https://developer.mozilla.org/en-US/docs/Web/API/Element/insertAdjacentHTML
+
+**- error_message_div_contains** = if you want add any class, id or attribute to the error message div, set this parameter to exactly what you want to add, e.g. if you want to the div to contain class='my_class', set this parameter as `class='my_class'`, **just notice that this value is embraced with backticks marks !!!
+
 **- error_messages** = object, set the message you want, 'message0' is always assigned to message on not filled out input field
 
 **- callbacks** = object, callback functions to be executed on the field - must return true on success and false on failure
@@ -145,6 +151,9 @@ const inst = new Validator({
             scroll_to_input: true,
             scroll_behavior: 'smooth',
             error_message_display: true,
+            /* error_message_place_class: 'my_class', */
+            /* error_message_place_where: 'beforeend', */
+            /* error_message_div_contains: `class='my_class'`, */
             custom_styles_change: {
                 borderColor: 'red',
                 borderRadius: '5px'
