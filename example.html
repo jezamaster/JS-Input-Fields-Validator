@@ -64,7 +64,8 @@ const testSelect = (selected_value)=> {
 
 // instantiate Validator 
 const inst = new Validator({
-            validate_only_on_submit: false,
+            validate_on_lost_focus: true,
+            validate_form_on_submit: true,
             scroll_to_input: true,
             scroll_behavior: 'smooth',
             error_message_display: true,
