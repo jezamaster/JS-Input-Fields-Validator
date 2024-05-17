@@ -34,8 +34,8 @@ export class Validator {
     }
     this.callbacks = options.callbacks ? options.callbacks : {},
     this.password_regex = options.password_regex ? options.password_regex : /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{6,20}$/;
-    // start validator if validate_only_on_submit === false
-    if(this.validate_on_lost_focus === false) {
+    // start validator for each input field if validate_on_lost_focus === true
+    if(this.validate_on_lost_focus === true) {
       this.fetchInputs();
     }
   }
