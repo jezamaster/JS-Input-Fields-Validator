@@ -3,9 +3,9 @@ export class Validator {
   constructor(options = {}) { 
     // set class options properties
     // if true, carry out validation right after the input field lost focus
-    this.validate_on_lost_focus = options.validate_on_lost_focus ? options.validate_on_lost_focus : false;
+    this.validate_on_lost_focus = options.validate_on_lost_focus ? options.validate_on_lost_focus : true;
     // if true, validate all input fields in the form when submitting the form; if false, no validation is done on submitting the form
-    this.validate_form_on_submit = options.validate_form_on_submit ? options.validate_form_on_submit : false;
+    this.validate_form_on_submit = options.validate_form_on_submit ? options.validate_form_on_submit : true;
     // scroll screen to the input field which failed validation
     this.scroll_to_input = options.scroll_to_input ? options.scroll_to_input : false;
     this.scroll_behavior = options.scroll_behavior ? options.scroll_behavior : 'smooth';
