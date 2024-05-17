@@ -65,7 +65,7 @@ When submitting the form (doesn't have to be form, it could be e.g. a div wrappe
 # CUSTOM CONFIGURATION
 All the custom configurations are passed as an object parameter when initializing the Class. Options to configure are as follows:
 
-**- validate_on_lost_focus** = if true, validation of input fields is being carried out right after the field lose focus (which means on blur event of particular inputs)
+**- validate_on_lost_focus** = if true, validation of input fields is being carried out right after the field lost focus (which means on blur event of particular inputs)
 
 **- validate_form_on_submit** = if true, validation of all fields is being carried out when submitting the form
 
