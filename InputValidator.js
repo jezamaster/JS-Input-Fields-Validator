@@ -2,7 +2,11 @@ export class Validator {
      
   constructor(options = {}) { 
     // set class options properties
-    this.validate_only_on_submit = options.validate_only_on_submit ? options.validate_only_on_submit : false;
+    // if true, carry out validation right after the input field lost focus
+    this.validate_on_lost_focus = options.validate_on_lost_focus ? options.validate_on_lost_focus : false;
+    // if true, validate all input fields in the form when submitting the form; if false, no validation is done on submitting the form
+    this.validate_form_on_submit = options.validate_form_on_submit ? options.validate_form_on_submit : false;
+    // scroll screen to the input field which failed validation
     this.scroll_to_input = options.scroll_to_input ? options.scroll_to_input : false;
     this.scroll_behavior = options.scroll_behavior ? options.scroll_behavior : 'smooth';
     // the classname of the closest input element where the error div should be rendered
@@ -31,7 +35,7 @@ export class Validator {
     this.callbacks = options.callbacks ? options.callbacks : {},
     this.password_regex = options.password_regex ? options.password_regex : /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{6,20}$/;
     // start validator if validate_only_on_submit === false
-    if(this.validate_only_on_submit === false) {
+    if(this.validate_on_lost_focus === false) {
       this.fetchInputs();
     }
   }
@@ -358,6 +362,10 @@ export class Validator {
       
   // check all input fields if not empty
   async validateForm(parent_element) {
+    // if validate_form_on_submit is set to false, resolve true right away (which means ignore the correctness of form fields on submitting the form)
+    if(this.validate_form_on_submit === false) {
+      return Promise.resolve(true);
+    }
     let all_inputs_ok = true;
     this.inputs_to_validate = document.querySelectorAll('[data-inputvalidator]');
     for (let el of this.inputs_to_validate) {
