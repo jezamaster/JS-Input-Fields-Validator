@@ -65,7 +65,9 @@ When submitting the form (doesn't have to be form, it could be e.g. a div wrappe
 # CUSTOM CONFIGURATION
 All the custom configurations are passed as an object parameter when initializing the Class. Options to configure are as follows:
 
-**- validate_only_on_submit** = if true, validation of input fields gets executed only when submitting the whole form (which means not on blur event of particular inputs)
+**- validate_on_lost_focus** = if true, validation of input fields is being carried out right after the field lose focus (which means on blur event of particular inputs)
+
+**- validate_form_on_submit** = if true, validation of all fields is being carried out when submitting the form
 
 **- scroll_to_input** = if set to true, page will scroll to the inputs (scroll_to_input has higher priority than scroll_to_alert)
 
